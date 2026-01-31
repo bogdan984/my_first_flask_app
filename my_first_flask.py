@@ -1,30 +1,23 @@
 from flask import Flask, request, jsonify, render_template
 
-# create the flask app
+# Создаем приложение
 app = Flask(__name__)
 
-# what html should be loaded as the home page when the app loads?
+# Главная страница
 @app.route('/')
 def home():
-    return render_template('app_frontend.html', prediction_text="")
+    # Исправлено на index.html, так как он лежит в папке templates
+    return render_template('index.html', prediction_text="")
 
-# define the logic for reading the inputs from the WEB PAGE, 
-# running the model, and displaying the prediction
+# Логика обработки формы
 @app.route('/predict', methods=['GET','POST'])
 def predict():
+    # Получаем текст из поля с именем 'description'
+    # ВНИМАНИЕ: в нашем красивом HTML поле называлось 'content'. 
+    # Нужно либо в HTML сменить name="content" на name="description", 
+    # либо здесь изменить на request.form.get('content')
+    a_description = request.form.get('description') 
+    return render_template('index.html', prediction_text=a_description)
 
-    # get the description submitted on the web page
-    a_description = request.form.get('description')
-    return render_template('app_frontend.html', prediction_text=a_description)
-    #return 'Description entered: {}'.format(a_description)
-
-#@app.route('/prediction', methods=['GET', 'POST'])
-#def prediction():
-#    if request.method == 'POST':
-#        prediction_data = request.json
-#        print(prediction_data)
-#    return jsonify({'result': prediction_data})
-
-# boilerplate flask app code
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
